@@ -8,6 +8,13 @@ import {
   Sidebar,
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/components/app-sidebar";
+import {
+  ClerkProvider,
+  Show,
+  SignInButton,
+  SignUpButton,
+  UserButton,
+} from "@clerk/nextjs";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,21 +42,54 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} min-h-screen antialiased`}
     >
       <body className="max-h-screen">
-        <div className="text-2xl font-semibold border w-full p-2">Quiz app</div>
-        <SidebarProvider>
-          <div className="flex min-h-svh w-full flex-col">
-            <header className="flex  w-full shrink-0 items-center gap-2 border-b border-black/[.06] px-2 dark:border-white/[.08]"></header>
-            <div className="flex flex-1">
-              <AppSidebar />
-              <SidebarInset>
-                <div className="h-full w-10 px-2 border-r bg-sidebar">
-                  <SidebarTrigger />
-                </div>
-                <div className="flex flex-1 flex-col">{children}</div>
-              </SidebarInset>
+        <ClerkProvider>
+          <Show when="signed-out">
+            {/* <SignedOut /> */}
+            <SignInButton />
+            <SignUpButton>
+              <button className="bg-purple-700 text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
+                Sign Up
+              </button>
+            </SignUpButton>
+          </Show>
+          <Show when="signed-in">
+            <div className="flex justify-between border w-full p-3">
+              <div className="text-2xl font-semibold  ">Quiz app</div>
+              <UserButton />
             </div>
-          </div>
-        </SidebarProvider>
+
+            {/* <ClerkProvider>
+          <header className="flex justify-end items-center p-4 gap-4 h-16">
+            <Show when="signed-out">
+              <SignInButton />
+              <SignUpButton>
+                <button className="bg-purple-700 text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
+                  Sign Up
+                </button>
+              </SignUpButton>
+            </Show>
+            <Show when="signed-in">
+              <UserButton />
+            </Show>
+          </header>
+          {children}
+        </ClerkProvider> */}
+            <SidebarProvider>
+              <div className="flex min-h-svh w-full flex-col">
+                <header className="flex  w-full shrink-0 items-center gap-2 border-b border-black/[.06] px-2 dark:border-white/[.08]"></header>
+                <div className="flex flex-1">
+                  <AppSidebar />
+                  <SidebarInset>
+                    <div className="h-full w-10 px-2 border-r bg-sidebar">
+                      <SidebarTrigger />
+                    </div>
+                    <div className="flex flex-1 flex-col">{children}</div>
+                  </SidebarInset>
+                </div>
+              </div>
+            </SidebarProvider>
+          </Show>
+        </ClerkProvider>
       </body>
     </html>
   );
