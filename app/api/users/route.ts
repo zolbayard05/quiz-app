@@ -1,6 +1,7 @@
 import pool from "@/lib/db";
 import { NextResponse } from "next/server";
 
+// GET REQUEST
 export const GET = async () => {
   const result = await pool.query("SELECT * FROM employees");
   return NextResponse.json(
@@ -9,13 +10,14 @@ export const GET = async () => {
   );
 };
 
+// POST REQUEST
 export const POST = async (request: Request) => {
   const body = await request.json();
-  const { fullname, age, gender, department, salary, years_of_service } = body;
+  const { email, name, clerkId, articles } = body;
 
   const result = await pool.query(
-    `INSERT INTO employees (fullname, age, gender, department, salary, years_of_service) VALUES 
-    ${fullname}, ${age}, ${gender}
+    `INSERT INTO users (email, name, clerkId, articles) VALUES 
+    ${email}, ${name}, ${clerkId} ${articles}, 
     `,
   );
 
