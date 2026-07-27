@@ -5,7 +5,6 @@ import {
   SidebarProvider,
   SidebarInset,
   SidebarTrigger,
-  Sidebar,
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/components/app-sidebar";
 import {
@@ -80,7 +79,7 @@ export default function RootLayout({
                 <div className="flex flex-1">
                   <AppSidebar />
                   <SidebarInset>
-                    <div className="h-full w-10 px-2 border-r bg-sidebar">
+                    <div className="flex h-12 w-full shrink-0 items-center border-b bg-sidebar px-2">
                       <SidebarTrigger />
                     </div>
                     <div className="flex flex-1 flex-col">{children}</div>

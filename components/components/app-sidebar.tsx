@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { X } from "lucide-react";
 
 import {
   Sidebar,
@@ -33,9 +34,6 @@ export function AppSidebar() {
   return (
     <Sidebar className="mt-14">
       <SidebarHeader>
-        {/* <div className="flex items-center justify-end">
-          <SidebarTrigger />
-        </div> */}
         <button
           type="button"
           className="flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm text-zinc-900 hover:bg-zinc-100 transition-colors font-semibold"
@@ -57,15 +55,17 @@ export function AppSidebar() {
                   <span className="truncate">{item.title}</span>
                 </SidebarMenuButton>
                 <SidebarMenuAction
-                  onClick={(e) => {
+                  showOnHover
+                  onClick={() => {
                     setHistory((prev) => prev.filter((h) => h.id !== item.id));
                   }}
-                ></SidebarMenuAction>
+                >
+                  <X />
+                </SidebarMenuAction>
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
         </SidebarGroupContent>
-        )
         {history.length === 0 && (
           <div className="px-3 py-6 text-center text-sm text-zinc-400">
             no history
