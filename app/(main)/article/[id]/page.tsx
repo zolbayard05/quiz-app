@@ -1,21 +1,20 @@
 "use client";
-
-import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { use, useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 
-export default async function ArticlePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = use(params);
+export default function ArticlePage() {
+  const { id } = useParams<{ id: string }>();
   const [article, setArticle] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [showContent, setShowContent] = useState(false);
+  const [quizLoading, setQuizLoading] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
-    axios.get(`/api/articles/${id}`).then((r) => setArticle(r.data));
+    axios.get(`/api/article/${id}`).then((r) => setArticle(r.data));
   }, [id]);
 
   const summarize = async () => {
@@ -24,19 +23,26 @@ export default async function ArticlePage({
       const { data } = await axios.post("/api/generate", { articleId: id });
       setArticle(data);
     } catch {
-      alert("summarize hiih uyd aldaa garlaa");
+      alert("summarize hiihed aldaa garlaa");
     }
     setLoading(false);
   };
 
   const createQuiz = async () => {
-    alert("udahgui hiine");
+    setQuizLoading(true);
+    try {
+      const { data } = await axios.post(`/api/article/${id}/quizzes`);
+      router.push(`/quiz/${data.quizId}`);
+    } catch {
+      alert("quiz uusgehd aldaa garlaa");
+      setQuizLoading(false);
+    }
   };
 
-  if (!article) return <div className="p-6">achaalj baina...</div>;
+  if (!article) return <div className="p-6">rendering...</div>;
 
   return (
-    <div>
+    <div className="mx-auto w-full max-w-2xl p-6">
       <h1 className="text-2xl font-semibold">{article.title}</h1>
 
       {article.summary ? (
@@ -48,13 +54,15 @@ export default async function ArticlePage({
             {article.summary}
           </div>
 
-          <div>
-            <Button onClick={createQuiz}>take quiz</Button>
+          <div className="mt-4 flex gap-3">
+            <Button onClick={createQuiz} disabled={quizLoading}>
+              {quizLoading ? " Quiz generaring..." : "Take quiz"}
+            </Button>
             <Button
               variant="outline"
               onClick={() => setShowContent(!showContent)}
             >
-              see content
+              See content
             </Button>
           </div>
 
@@ -66,7 +74,7 @@ export default async function ArticlePage({
         </>
       ) : (
         <Button onClick={summarize} disabled={loading} className="mt-4">
-          {loading ? "summrize hiij baina..." : "summarize"}
+          {loading ? "summarzing..." : "summarize"}
         </Button>
       )}
     </div>

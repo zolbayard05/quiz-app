@@ -28,7 +28,7 @@ export default function Home() {
       return;
     }
     try {
-      await axios.post("/api/articles", { title, content });
+      await axios.post("/api/article", { title, content });
       setTitle("");
       setContent("");
       load();
