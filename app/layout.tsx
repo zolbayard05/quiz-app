@@ -1,10 +1,8 @@
-import type { Metadata } from "next";
-
+import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
-import { ClerkProvider } from "@clerk/nextjs";
-
-export const metadata: Metadata = { title: "Quiz app" };
+export const metadata = { title: "Quiz app" };
 
 export default function RootLayout({
   children,
@@ -12,7 +10,10 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className="min-h-screen">{children}</body>
+        <body className="min-h-screen">
+          {children}
+          <Toaster />
+        </body>
       </html>
     </ClerkProvider>
   );

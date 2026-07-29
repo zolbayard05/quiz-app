@@ -1,75 +1,61 @@
 "use client";
 
 import * as React from "react";
-import { X } from "lucide-react";
+import axios from "axios";
+import { useRouter, usePathname, useParams } from "next/navigation";
 
 import {
   Sidebar,
   SidebarContent,
+  SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-export type HistoryItem = {
-  id: string;
-  title: string;
-};
-
-const MOCK_HISTORY: HistoryItem[] = [
-  { id: "1", title: "React hooks" },
-  { id: "2", title: "mongolian history" },
-  { id: "3", title: "genghis khan" },
-  { id: "5", title: "SQL" },
-];
+type Article = { id: number; title: string };
 
 export function AppSidebar() {
-  const [history, setHistory] = React.useState<HistoryItem[]>(MOCK_HISTORY);
-  const [activeId, setActiveId] = React.useState<string>(MOCK_HISTORY[0]?.id);
+  const [history, setHistory] = React.useState<Article[]>([]);
+  const router = useRouter();
+  const pathname = usePathname();
+  const params = useParams<{ id?: string }>();
+
+  React.useEffect(() => {
+    axios
+      .get("/api/article")
+      .then((r) => setHistory(r.data))
+      .catch(() => setHistory([]));
+  }, [pathname]);
 
   return (
-    <Sidebar className="mt-14">
-      <SidebarHeader>
-        <button
-          type="button"
-          className="flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm text-zinc-900 hover:bg-zinc-100 transition-colors font-semibold"
-          onClick={() => {}}
-        >
-          History
-        </button>
+    <Sidebar className="top-14 h-[calc(100svh-3.5rem)] border-r bg-white">
+      <SidebarHeader className="flex flex-row items-center justify-between px-4 py-3">
+        <span className="text-sm font-medium">History</span>
+        <SidebarTrigger className="text-zinc-400" />
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroupContent>
-          <SidebarMenu>
-            {history.map((item) => (
-              <SidebarMenuItem key={item.id}>
-                <SidebarMenuButton
-                  isActive={item.id === activeId}
-                  onClick={() => setActiveId(item.id)}
-                >
-                  <span className="truncate">{item.title}</span>
-                </SidebarMenuButton>
-                <SidebarMenuAction
-                  showOnHover
-                  onClick={() => {
-                    setHistory((prev) => prev.filter((h) => h.id !== item.id));
-                  }}
-                >
-                  <X />
-                </SidebarMenuAction>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroupContent>
-        {history.length === 0 && (
-          <div className="px-3 py-6 text-center text-sm text-zinc-400">
-            no history
-          </div>
-        )}
+        <SidebarGroup className="py-0">
+          <SidebarGroupContent>
+            <SidebarMenu className="gap-1">
+              {history.map((item) => (
+                <SidebarMenuItem key={item.id}>
+                  <SidebarMenuButton
+                    isActive={params.id === String(item.id)}
+                    onClick={() => router.push(`/article/${item.id}`)}
+                    className="h-auto whitespace-normal py-2 text-[13px] leading-snug text-zinc-700"
+                  >
+                    {item.title}
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
     </Sidebar>
   );

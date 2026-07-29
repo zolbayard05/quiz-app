@@ -1,82 +1,96 @@
 "use client";
 import axios from "axios";
+import { Sparkles, BookOpen, ChevronLeft } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function ArticlePage() {
   const { id } = useParams<{ id: string }>();
-  const [article, setArticle] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [showContent, setShowContent] = useState(false);
-  const [quizLoading, setQuizLoading] = useState(false);
-
   const router = useRouter();
+  const [article, setArticle] = useState<any>(null);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     axios.get(`/api/article/${id}`).then((r) => setArticle(r.data));
   }, [id]);
 
-  const summarize = async () => {
+  const takeQuiz = async () => {
     setLoading(true);
-    try {
-      const { data } = await axios.post("/api/generate", { articleId: id });
-      setArticle(data);
-    } catch {
-      alert("summarize hiihed aldaa garlaa");
-    }
-    setLoading(false);
-  };
-
-  const createQuiz = async () => {
-    setQuizLoading(true);
     try {
       const { data } = await axios.post(`/api/article/${id}/quizzes`);
       router.push(`/quiz/${data.quizId}`);
     } catch {
-      alert("quiz uusgehd aldaa garlaa");
-      setQuizLoading(false);
+      toast.error("quiz uusgehed aldaa garlaa");
+      setLoading(false);
     }
   };
 
-  if (!article) return <div className="p-6">rendering...</div>;
+  if (!article) {
+    return (
+      <div className="mx-auto w-full max-w-[420px] space-y-3">
+        <Skeleton className="h-6 w-40" />
+        <Skeleton className="h-32 w-full" />
+      </div>
+    );
+  }
 
   return (
-    <div className="mx-auto w-full max-w-2xl p-6">
-      <h1 className="text-2xl font-semibold">{article.title}</h1>
+    <>
+      <Button
+        variant="outline"
+        size="icon"
+        className="mb-3 size-7"
+        onClick={() => router.push("/")}
+      >
+        <ChevronLeft className="size-4" />
+      </Button>
 
-      {article.summary ? (
-        <>
-          <div className="mt-4 rounded border bg-gray-50 p-4">
-            <div className="mb-2 text-sm font-medium text-gray-500">
-              Summary
-            </div>
-            {article.summary}
-          </div>
+      <div className="mx-auto w-full max-w-[420px] rounded-xl border bg-white p-5 shadow-sm">
+        <div className="flex items-center gap-2">
+          <Sparkles className="size-4" />
+          <h1 className="font-semibold">Article Quiz Generator</h1>
+        </div>
 
-          <div className="mt-4 flex gap-3">
-            <Button onClick={createQuiz} disabled={quizLoading}>
-              {quizLoading ? " Quiz generaring..." : "Take quiz"}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => setShowContent(!showContent)}
-            >
-              See content
-            </Button>
-          </div>
+        <div className="mt-4 flex items-center gap-1.5 text-xs text-zinc-600">
+          <BookOpen className="size-3.5" />
+          Summarized content
+        </div>
 
-          {showContent && (
-            <div className="mt-4 whitespace-pre-wrap text-sm text-gray-700">
-              {article.content}
-            </div>
-          )}
-        </>
-      ) : (
-        <Button onClick={summarize} disabled={loading} className="mt-4">
-          {loading ? "summarzing..." : "summarize"}
-        </Button>
-      )}
-    </div>
+        <h2 className="mt-2 text-lg font-semibold">{article.title}</h2>
+        <p className="mt-2 text-xs leading-relaxed text-zinc-700">
+          {article.summary}
+        </p>
+
+        <div className="mt-5 flex items-center justify-between">
+          <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
+            See content
+          </Button>
+          <Button size="sm" onClick={takeQuiz} disabled={loading}>
+            {loading ? "Creating..." : "Take a quiz"}
+          </Button>
+        </div>
+      </div>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-h-[80svh] overflow-y-auto sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{article.title}</DialogTitle>
+          </DialogHeader>
+          <p className="whitespace-pre-wrap text-xs leading-relaxed text-zinc-700">
+            {article.content}
+          </p>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
