@@ -23,7 +23,6 @@ const MOCK_HISTORY: HistoryItem[] = [
   { id: "1", title: "React hooks" },
   { id: "2", title: "mongolian history" },
   { id: "3", title: "genghis khan" },
-  { id: "4", title: "math quiz" },
   { id: "5", title: "SQL" },
 ];
 
