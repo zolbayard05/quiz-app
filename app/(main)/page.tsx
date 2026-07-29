@@ -4,6 +4,7 @@ import { Sparkles } from "lucide-react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Home() {
   const [title, setTitle] = useState("");
@@ -22,11 +23,18 @@ export default function Home() {
     load();
   }, []);
   const save = async () => {
-    await axios.post("/api/articles", { title, content });
-
-    setTitle("");
-    setContent("");
-    load();
+    if (!title.trim() || !content.trim()) {
+      alert("title aa bich durakaa");
+      return;
+    }
+    try {
+      await axios.post("/api/articles", { title, content });
+      setTitle("");
+      setContent("");
+      load();
+    } catch (e) {
+      alert("adlaa garlaa");
+    }
   };
 
   return (
@@ -51,12 +59,14 @@ export default function Home() {
       </Button>
       <div className="mt-8 space-y-2">
         {articles.map((a) => (
-          <div key={a.id} className="rounded border p-3">
-            <div className="font-medium">{a.title}</div>
-            <div className="text-sm text-gray-500 line-clamp-2">
-              {a.content}
+          <Link key={a.id} href={`/article/${a.id}`}>
+            <div className="rounded border p-3">
+              <div className="font-medium">{a.title}</div>
+              <div className="text-sm text-gray-500 line-clamp-2">
+                {a.content}
+              </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

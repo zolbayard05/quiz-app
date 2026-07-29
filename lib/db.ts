@@ -5,4 +5,4 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false },
 });
 export default pool;
-console.log("DB URL:", process.env.DATABSAE_URL);
+console.log("DB URL:", process.env.DATABASE_URL);

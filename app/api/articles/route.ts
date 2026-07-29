@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     );
   }
   const result = await pool.query(
-    "INSERT INTO articles (user_id, title, content) VALUES (1$, 2$, 3$) RETURNING *",
+    "INSERT INTO articles (user_id, title, content) VALUES ($1, $2, $3) RETURNING *",
     [user.id, title, content],
   );
   return NextResponse.json(result.rows[0], { status: 201 });
