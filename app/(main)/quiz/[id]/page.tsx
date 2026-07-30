@@ -64,7 +64,7 @@ export default function QuizPage() {
 
   if (result) {
     return (
-      <div className="mx-auto w-full max-w-[460px]">
+      <div className="mx-auto w-full max-w-2xl">
         <div className="flex items-center gap-2">
           <Sparkles className="size-4" />
           <h1 className="font-semibold">Quiz completed</h1>
@@ -131,13 +131,13 @@ export default function QuizPage() {
   }
 
   if (!questions.length) {
-    return <Skeleton className="mx-auto h-40 w-full max-w-[460px]" />;
+    return <Skeleton className="mx-auto h-40 w-full max-w-2xl" />;
   }
 
   const q = questions[current];
 
   return (
-    <div className="mx-auto w-full max-w-[460px]">
+    <div className="mx-auto w-full max-w-2xl">
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2">

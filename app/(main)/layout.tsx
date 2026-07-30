@@ -14,7 +14,7 @@ export default function MainLayout({
   return (
     <div className="flex min-h-svh flex-col">
       <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center justify-between border-b bg-white px-5">
-        <div className="text-base font-semibold">Quiz app</div>
+        <div className="text-3xl font-semibold">Quiz app</div>
         <UserButton />
       </header>
 

@@ -15,7 +15,5 @@ export async function getOrCreateUser() {
     "INSERT INTO users (email, name, clerk_id) VALUES ($1, $2, $3) RETURNING *",
     [user.emailAddresses[0]?.emailAddress, user.firstName, user.id],
   );
-  const email = user.emailAddresses[0]?.emailAddress;
-  console.log("email:", email);
   return created.rows[0];
 }

@@ -34,7 +34,7 @@ export function AppSidebar() {
   return (
     <Sidebar className="top-14 h-[calc(100svh-3.5rem)] border-r bg-white">
       <SidebarHeader className="flex flex-row items-center justify-between px-4 py-3">
-        <span className="text-sm font-medium">History</span>
+        <span className="text-2xl font-medium">History</span>
         <SidebarTrigger className="text-zinc-400" />
       </SidebarHeader>
 
@@ -47,7 +47,7 @@ export function AppSidebar() {
                   <SidebarMenuButton
                     isActive={params.id === String(item.id)}
                     onClick={() => router.push(`/article/${item.id}`)}
-                    className="h-auto whitespace-normal py-2 text-[13px] leading-snug text-zinc-700"
+                    className="h-auto whitespace-normal py-2 text-xl leading-snug text-zinc-700"
                   >
                     {item.title}
                   </SidebarMenuButton>

@@ -22,7 +22,7 @@ export default function HistoryPage() {
 
   return (
     <div className="mx-auto w-full max-w-2xl p-6">
-      <h1 className="text-2xl font-semibold">history</h1>
+      <h1 className="text-xl font-semibold">history</h1>
 
       <div className="mt-6 space-y-3">
         {rows.map((r) => (
@@ -39,31 +39,31 @@ export default function HistoryPage() {
             </div>
 
             {r.summary && (
-              <div className="mt-2 line-clamp-2 text-sm text-gray-600">
+              <div className="mt-2 line-clamp-2 text-[18px] text-gray-600">
                 {r.summary}
               </div>
             )}
 
-            <div className="mt-3 flex items-center gap-4 text-sm">
+            <div className="mt-3 flex items-center gap-4 text-[18px]">
               {r.quiz_id ? (
                 <>
                   <span className="text-gray-600">
-                    Оролдлого: {r.attempt_count}
+                    attempt: {r.attempt_count}
                   </span>
                   {r.best_score !== null && (
                     <span className="font-medium text-green-600">
-                      Дээд оноо: {r.best_score} / 5
+                      best score: {r.best_score} / 5
                     </span>
                   )}
                   <Link
                     href={`/quiz/${r.quiz_id}`}
                     className="ml-auto text-purple-700 hover:underline"
                   >
-                    Дахин өгөх
+                    try again
                   </Link>
                 </>
               ) : (
-                <span className="text-gray-400">Quiz үүсгээгүй</span>
+                <span className="text-gray-400">no quiz</span>
               )}
             </div>
           </div>

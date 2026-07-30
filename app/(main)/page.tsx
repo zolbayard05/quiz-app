@@ -21,7 +21,7 @@ export default function Home() {
       await axios.post("/api/generate", { articleId: data.id });
       router.push(`/article/${data.id}`);
     } catch {
-      toast.error("Алдаа гарлаа. Дахин оролдоно уу.");
+      toast.error("Aldaa garlaa dahiad neg uz dee.");
       setLoading(false);
     }
   };
@@ -29,18 +29,18 @@ export default function Home() {
   const disabled = !title.trim() || !content.trim() || loading;
 
   return (
-    <div className="mx-auto w-full max-w-[420px] rounded-xl border bg-white p-5 shadow-sm">
+    <div className="mx-auto w-full max-w-2xl rounded-xl border bg-white p-5 shadow-sm">
       <div className="flex items-center gap-2">
-        <Sparkles className="size-4" />
-        <h1 className="font-semibold">Article Quiz Generator</h1>
+        <Sparkles className="size-5" />
+        <h1 className="font-semibold text-2xl">Article Quiz Generator</h1>
       </div>
-      <p className="mt-1 text-xs leading-relaxed text-zinc-500">
+      <p className="mt-1 text-[16px] leading-relaxed text-zinc-500">
         Paste your article below to generate a summarize and quiz question. Your
         articles will saved in the sidebar for future reference.
       </p>
 
       <div className="mt-4 space-y-1.5">
-        <div className="flex items-center gap-1.5 text-xs text-zinc-600">
+        <div className="flex items-center gap-1.5 text-[14px] text-zinc-600">
           <Type className="size-3.5" />
           Article Title
         </div>
@@ -53,7 +53,7 @@ export default function Home() {
       </div>
 
       <div className="mt-3 space-y-1.5">
-        <div className="flex items-center gap-1.5 text-xs text-zinc-600">
+        <div className="flex items-center gap-1.5 text-[14px] text-zinc-600">
           <FileText className="size-3.5" />
           Article Content
         </div>

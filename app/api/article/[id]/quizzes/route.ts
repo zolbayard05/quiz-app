@@ -19,28 +19,50 @@ export async function POST(
     return NextResponse.json({ error: "oldsongui" }, { status: 404 });
   }
 
-  const prompt = `Generate 5 multiple choice questions based on this article: ${article.summary}.
-Return the response in this exact JSON format:
-[
-  {
-    "question": "Question text here",
-    "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
-    "answer": "0"
-  }
-]
-Make sure the response is valid JSON and the answer is the index (0-3) of the correct option.`;
+  //   const prompt = `Generate 5 multiple choice questions based on this article: ${article.summary}.
+  // Return the response in this exact JSON format:
+  // [
+  //   {
+  //     "question": "Question text here",
+  //     "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+  //     "answer": "0"
+  //   }
+  // ]
+  // Make sure the response is valid JSON and the answer is the index (0-3) of the correct option.`;
 
-  let questions;
-  for (let i = 0; i < 2; i++) {
-    try {
-      const raw = await askGemini(prompt);
-      const clean = raw.replace(/```json|```/g, "").trim();
-      questions = JSON.parse(clean);
-      if (Array.isArray(questions) && questions.length > 0) break;
-    } catch {
-      questions = null;
-    }
-  }
+  //   let questions;
+  //   for (let i = 0; i < 2; i++) {
+  //     try {
+  //       const generatedText = await askGemini(prompt);
+  //       const clean = generatedText.replace(/```json|```/g, "").trim();
+  //       questions = JSON.parse(clean);
+  //       if (Array.isArray(questions) && questions.length > 0) break;
+  //     } catch {
+  //       questions = null;
+  //     }
+  //   }
+
+  const questions = await askGeminiJson(
+    `Generate 5 multiple choice questions based on this article: ${article.summary}`,
+    {
+      type: "object",
+      properties: {
+        questions: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              question: { type: "string" },
+              options: { type: "array", items: { type: "string" } },
+              answer: { type: "integer" },
+            },
+            required: ["question", "options", "answer"],
+          },
+        },
+      },
+      required: ["questions"],
+    },
+  ).then((d) => d.questions);
 
   if (!questions) {
     return NextResponse.json(

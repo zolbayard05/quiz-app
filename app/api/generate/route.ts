@@ -1,5 +1,4 @@
 import pool from "@/lib/db";
-import { askGemini } from "@/lib/gemini";
 import { getOrCreateUser } from "@/lib/user";
 import { NextResponse } from "next/server";
 
