@@ -29,7 +29,7 @@ export default function Home() {
   const disabled = !title.trim() || !content.trim() || loading;
 
   return (
-    <div className="mx-auto w-full max-w-2xl rounded-xl border bg-white p-5 shadow-sm">
+    <div className="mx-auto w-full max-w-2xl rounded-[10px] border bg-white p-5 shadow-sm">
       <div className="flex items-center gap-2">
         <Sparkles className="size-5" />
         <h1 className="font-semibold text-2xl">Article Quiz Generator</h1>
@@ -48,7 +48,7 @@ export default function Home() {
           placeholder="Enter a title for your article..."
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="text-sm"
+          className="text-sm rounded-[8px]"
         />
       </div>
 
@@ -61,12 +61,17 @@ export default function Home() {
           placeholder="Paste your article content here..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="h-32 resize-none text-sm"
+          className="h-50 resize-none text-sm rounded-[8px]"
         />
       </div>
 
       <div className="mt-4 flex justify-end">
-        <Button size="sm" onClick={generate} disabled={disabled}>
+        <Button
+          size="lg"
+          onClick={generate}
+          disabled={disabled}
+          className="rounded-[10px]"
+        >
           {loading ? "Generating..." : "Generate summary"}
         </Button>
       </div>

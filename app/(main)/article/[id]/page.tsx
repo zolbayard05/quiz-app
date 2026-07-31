@@ -55,7 +55,7 @@ export default function ArticlePage() {
         <ChevronLeft className="size-4" />
       </Button>
 
-      <div className="mx-auto w-full max-w-2xl rounded-xl border bg-white p-5 shadow-sm">
+      <div className="mx-auto w-full max-w-2xl rounded-[10px] border bg-white p-5 shadow-sm">
         <div className="flex items-center gap-2">
           <Sparkles className="size-4" />
           <h1 className="font-semibold text-2xl">Article Quiz Generator</h1>
@@ -72,10 +72,20 @@ export default function ArticlePage() {
         </p>
 
         <div className="mt-5 flex items-center justify-between">
-          <Button variant="outline" size="lg" onClick={() => setOpen(true)}>
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={() => setOpen(true)}
+            className="rounded-[10px]"
+          >
             See content
           </Button>
-          <Button size="lg" onClick={takeQuiz} disabled={loading}>
+          <Button
+            size="lg"
+            onClick={takeQuiz}
+            disabled={loading}
+            className="rounded-[10px]"
+          >
             {loading ? "Creating..." : "Take a quiz"}
           </Button>
         </div>

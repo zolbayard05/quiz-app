@@ -22,8 +22,6 @@ export default function HistoryPage() {
 
   return (
     <div className="mx-auto w-full max-w-2xl p-6">
-      <h1 className="text-xl font-semibold">history</h1>
-
       <div className="mt-6 space-y-3">
         {rows.map((r) => (
           <div
