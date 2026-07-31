@@ -1,6 +1,11 @@
 import pool from "@/lib/db";
 import { getOrCreateUser } from "@/lib/user";
+import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
+
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY,
+});
 
 export async function POST(req: Request) {
   const user = await getOrCreateUser();
@@ -18,9 +23,18 @@ export async function POST(req: Request) {
 
   if (article.summery) return NextResponse.json(article);
 
-  const summary = await askGemini(
-    `Please provide a concise summary of the following article: ${article.content}`,
-  );
+  const interaction = await ai.interactions.create({
+    model: "gemini-3.6-flash",
+    input: `Please provide a concise summary of the following article: ${article.content}`,
+  });
+
+  const summary = interaction.output_text;
+  if (!summary) {
+    return NextResponse.json(
+      { error: " gemini yuch butsaahgui baina" },
+      { status: 500 },
+    );
+  }
 
   const updated = await pool.query(
     "UPDATE articles SET summary = $1 WHERE id = $2 RETURNING *",

@@ -45,11 +45,11 @@ export default function ArticlePage() {
   }
 
   return (
-    <>
+    <div className="mx-auto w-full max-w-2xl flex flex-col gap-4">
       <Button
         variant="outline"
         size="icon"
-        className="mb-3 size-7"
+        className="mb-3 size-7 rounded-[8px] h-10 w-10"
         onClick={() => router.push("/")}
       >
         <ChevronLeft className="size-4" />
@@ -91,6 +91,6 @@ export default function ArticlePage() {
           </p>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 }

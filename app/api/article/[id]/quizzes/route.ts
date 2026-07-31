@@ -1,7 +1,9 @@
 import pool from "@/lib/db";
-import { askGemini } from "@/lib/gemini";
 import { getOrCreateUser } from "@/lib/user";
+import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
+
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export async function POST(
   req: Request,
@@ -19,32 +21,10 @@ export async function POST(
     return NextResponse.json({ error: "oldsongui" }, { status: 404 });
   }
 
-  //   const prompt = `Generate 5 multiple choice questions based on this article: ${article.summary}.
-  // Return the response in this exact JSON format:
-  // [
-  //   {
-  //     "question": "Question text here",
-  //     "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
-  //     "answer": "0"
-  //   }
-  // ]
-  // Make sure the response is valid JSON and the answer is the index (0-3) of the correct option.`;
-
-  //   let questions;
-  //   for (let i = 0; i < 2; i++) {
-  //     try {
-  //       const generatedText = await askGemini(prompt);
-  //       const clean = generatedText.replace(/```json|```/g, "").trim();
-  //       questions = JSON.parse(clean);
-  //       if (Array.isArray(questions) && questions.length > 0) break;
-  //     } catch {
-  //       questions = null;
-  //     }
-  //   }
-
-  const questions = await askGeminiJson(
-    `Generate 5 multiple choice questions based on this article: ${article.summary}`,
-    {
+  const interaction = await ai.interactions.create({
+    model: "gemini-3.6-flash",
+    input: `Generate 5 multiple choice questions based on this article: ${article.summary}`,
+    response_format: {
       type: "object",
       properties: {
         questions: {
@@ -62,14 +42,16 @@ export async function POST(
       },
       required: ["questions"],
     },
-  ).then((d) => d.questions);
+  });
 
-  if (!questions) {
+  if (!interaction.output_text) {
     return NextResponse.json(
-      { error: "quiz uusgej chadsangui" },
+      { error: "gemini yuch uguhgui baina" },
       { status: 500 },
     );
   }
+
+  const { questions } = JSON.parse(interaction.output_text);
 
   const quiz = await pool.query(
     "INSERT INTO quiz (article_id) VALUES ($1) RETURNING *",
@@ -77,12 +59,16 @@ export async function POST(
   );
   const quizId = quiz.rows[0].id;
 
-  for (const q of questions.slice(0, 5)) {
-    await pool.query(
-      "INSERT INTO questions (quiz_id, question, options, correct_answer) VALUES ($1, $2, $3, $4)",
-      [quizId, q.question, JSON.stringify(q.options), Number(q.answer)],
-    );
-  }
+  await Promise.all(
+    questions
+      .slice(0, 5)
+      .map((q: any) =>
+        pool.query(
+          "INSERT INTO questions (quiz_id, question, options, correct_answer) VALUES ($1, $2, $3, $4)",
+          [quizId, q.question, JSON.stringify(q.options), q.answer],
+        ),
+      ),
+  );
 
   return NextResponse.json({ quizId }, { status: 201 });
 }
