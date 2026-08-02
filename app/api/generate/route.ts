@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "oldsongui" }, { status: 404 });
   }
 
-  if (article.summery) return NextResponse.json(article);
+  if (article.summary) return NextResponse.json(article);
 
   const interaction = await ai.interactions.create({
     model: "gemini-3.6-flash",
